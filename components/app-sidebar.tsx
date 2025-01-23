@@ -2,6 +2,7 @@
 
 import type { User } from 'next-auth';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 import { PlusIcon } from '@/components/icons';
 import { SidebarHistory } from '@/components/sidebar-history';
@@ -26,31 +27,37 @@ export function AppSidebar({ user }: { user: User | undefined }) {
     <Sidebar className="group-data-[side=left]:border-r-0">
       <SidebarHeader>
         <SidebarMenu>
-          <div className="flex flex-row justify-between items-center">
+          <div className="flex flex-row items-center justify-between px-1">
             <Link
               href="/"
               onClick={() => {
                 setOpenMobile(false);
               }}
-              className="flex flex-row gap-3 items-center"
+              className="flex flex-row items-center gap-2 p-2 rounded-md hover:bg-sidebar-accent transition-colors duration-200"
             >
-              <span className="text-lg font-semibold px-2 hover:bg-muted rounded-md cursor-pointer">
-                Chatbot
-              </span>
+              <div className="size-8 relative shrink-0">
+                <Image
+                  src="/images/brandlogoico.ico"
+                  alt="Chat.segg Logo"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <span className="text-lg font-semibold">chat.segg</span>
             </Link>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
                   type="button"
-                  className="p-2 h-fit"
+                  className="p-2 rounded-md hover:bg-sidebar-accent"
                   onClick={() => {
                     setOpenMobile(false);
                     router.push('/');
                     router.refresh();
                   }}
                 >
-                  <PlusIcon />
+                  <PlusIcon size={32} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="end">New Chat</TooltipContent>

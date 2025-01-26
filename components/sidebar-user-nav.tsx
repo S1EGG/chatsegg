@@ -4,6 +4,7 @@ import Image from 'next/image';
 import type { User } from 'next-auth';
 import { signOut } from 'next-auth/react';
 import { useTheme } from 'next-themes';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 import {
   DropdownMenu,
@@ -25,19 +26,26 @@ export function SidebarUserNav({ user }: { user: User }) {
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton className="data-[state=open]:bg-sidebar-accent bg-background data-[state=open]:text-sidebar-accent-foreground h-10">
-              <Image
-                src={`https://avatar.vercel.sh/${user.email}`}
-                alt={user.email ?? 'User Avatar'}
-                width={24}
-                height={24}
-                className="rounded-full"
-              />
-              <span className="truncate">{user?.email}</span>
-              <ChevronUp className="ml-auto" />
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
+          <SidebarMenuButton
+            size="lg"
+            asChild
+            className="md:h-8 md:p-0 rounded-full"
+          >
+            <DropdownMenuTrigger asChild>
+              <div className="flex items-center justify-center">
+                <Avatar className="h-8 w-8 rounded-full">
+                  <AvatarImage
+                    src={user.image || ''}
+                    alt={user.name || ''}
+                    className="rounded-full"
+                  />
+                  <AvatarFallback className="rounded-full">
+                    {user.name?.charAt(0) || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+            </DropdownMenuTrigger>
+          </SidebarMenuButton>
           <DropdownMenuContent
             side="top"
             className="w-[--radix-popper-anchor-width]"

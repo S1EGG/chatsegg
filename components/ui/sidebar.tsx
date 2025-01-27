@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { VariantProps, cva } from 'class-variance-authority';
 import { PanelLeft } from 'lucide-react';
+import Image from 'next/image';
 
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -21,9 +22,9 @@ import {
 
 const SIDEBAR_COOKIE_NAME = 'sidebar:state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
-const SIDEBAR_WIDTH = '22rem';
-const SIDEBAR_WIDTH_MOBILE = '18rem';
-const SIDEBAR_WIDTH_ICON = '4rem';
+const SIDEBAR_WIDTH = '20rem';
+const SIDEBAR_WIDTH_MOBILE = '16rem';
+const SIDEBAR_WIDTH_ICON = '3rem';
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
 
 type SidebarContext = {
@@ -366,7 +367,7 @@ const SidebarHeader = React.forwardRef<
     <div
       ref={ref}
       data-sidebar="header"
-      className={cn('flex flex-col gap-2 p-2', className)}
+      className={cn('flex flex-col gap-2 p-2 pt-3 pb-3 !transition-none', 'group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:pt-3 group-data-[collapsible=icon]:pb-4', className)}
       {...props}
     />
   );
@@ -381,7 +382,7 @@ const SidebarFooter = React.forwardRef<
     <div
       ref={ref}
       data-sidebar="footer"
-      className={cn('flex flex-col gap-2 p-2', className)}
+      className={cn('flex flex-col gap-2 p-4', className)}
       {...props}
     />
   );
@@ -743,6 +744,64 @@ const SidebarMenuSubButton = React.forwardRef<
 });
 SidebarMenuSubButton.displayName = 'SidebarMenuSubButton';
 
+const SidebarBrandButton = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentProps<'button'> & {
+    asChild?: boolean;
+    isActive?: boolean;
+  }
+>(({ className, asChild = false, ...props }, ref) => {
+  const Comp = asChild ? Slot : 'button';
+  return (
+    <Comp
+      ref={ref}
+      data-sidebar="brand-button"
+      className={cn(
+        'h-8 w-8 p-0 flex items-center justify-center rounded-lg transition-colors hover:bg-sidebar-accent',
+        'group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:w-8',
+        className
+      )}
+      {...props}
+    />
+  );
+});
+SidebarBrandButton.displayName = 'SidebarBrandButton';
+
+const SidebarBrandMenuItem = React.forwardRef<
+  HTMLLIElement,
+  React.ComponentProps<'li'> & {
+    src: string;
+    alt: string;
+    href: string;
+    onClick?: () => void;
+  }
+>(({ className, src, alt, href, onClick, ...props }, ref) => {
+  return (
+    <SidebarMenuItem ref={ref} className={cn('!mt-0', className)} {...props}>
+      <SidebarBrandButton asChild>
+        <a
+          href={href}
+          onClick={(e) => {
+            e.preventDefault();
+            onClick?.();
+          }}
+          className="flex items-center justify-center size-full"
+        >
+          <Image
+            src={src}
+            alt={alt}
+            width={32}
+            height={32}
+            className="object-contain size-8"
+            priority
+          />
+        </a>
+      </SidebarBrandButton>
+    </SidebarMenuItem>
+  );
+});
+SidebarBrandMenuItem.displayName = 'SidebarBrandMenuItem';
+
 export {
   Sidebar,
   SidebarContent,
@@ -767,5 +826,7 @@ export {
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
+  SidebarBrandButton,
+  SidebarBrandMenuItem,
   useSidebar,
 };

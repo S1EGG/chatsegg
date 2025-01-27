@@ -18,6 +18,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarBrandButton,
+  SidebarBrandMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
@@ -51,15 +53,16 @@ const navItems = [
 
 export function AppSidebar({ user }: { user: User | undefined }) {
   const router = useRouter();
-  const [activeItem, setActiveItem] = React.useState(() => {
-    // 从URL hash中获取当前激活的模块，如果没有则默认为Chat
-    const hash = typeof window !== 'undefined' ? window.location.hash : '';
-    return navItems.find(item => item.href === hash) || navItems[0];
-  });
+  const [activeItem, setActiveItem] = React.useState(navItems[0]);
   const { setOpenMobile, setOpen } = useSidebar();
 
   // 监听URL hash变化
   React.useEffect(() => {
+    // 初始化时设置 activeItem
+    const hash = window.location.hash;
+    const initialItem = navItems.find(item => item.href === hash) || navItems[0];
+    setActiveItem(initialItem);
+
     const handleHashChange = () => {
       const hash = window.location.hash;
       const newActiveItem = navItems.find(item => item.href === hash) || navItems[0];
@@ -73,39 +76,30 @@ export function AppSidebar({ user }: { user: User | undefined }) {
   return (
     <Sidebar
       collapsible="icon"
-      className="overflow-hidden [&>[data-sidebar=sidebar]]:flex-row"
+      className="overflow-hidden [&>[data-sidebar=sidebar]]:flex-row [&>[data-sidebar=sidebar]]:!transition-none [&_[data-sidebar=header]]:!transition-none"
     >
       {/* Left sidebar - Icon navigation */}
       <Sidebar
         collapsible="none"
-        className="!w-[4rem] border-r flex-shrink-0 fixed left-0 z-50 !transition-none"
+        className="!w-12 border-r shrink-0 fixed left-0 z-50 !transition-none bg-white flex flex-col"
       >
-        <SidebarHeader className="pt-1.5 pb-3">
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton size="lg" asChild className="md:h-10 md:p-0 flex items-center justify-center w-full">
-                <a href="/" onClick={() => {
-                  setOpenMobile(false);
-                  setActiveItem(navItems[0]);
-                }}>
-                  <div className="flex aspect-square size-11 items-center justify-center">
-                    <Image
-                      src="/images/brandlogoico.ico"
-                      alt="Chat.segg Logo"
-                      width={40}
-                      height={40}
-                      className="object-contain"
-                    />
-                  </div>
-                </a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+        <SidebarHeader className="shrink-0">
+          <SidebarMenu className="flex flex-col items-center !transition-none">
+            <SidebarBrandMenuItem
+              src="/images/brandlogopng.png"
+              alt="Chat.segg Logo"
+              href="/"
+              onClick={() => {
+                setOpenMobile(false);
+                setActiveItem(navItems[0]);
+              }}
+            />
           </SidebarMenu>
         </SidebarHeader>
-        <SidebarContent>
+        <SidebarContent className="flex-1">
           <SidebarGroup>
-            <SidebarGroupContent className="px-2 md:px-1">
-              <SidebarMenu className="flex flex-col gap-4">
+            <SidebarGroupContent>
+              <SidebarMenu className="flex flex-col items-center gap-3">
                 {navItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <Tooltip>
@@ -118,13 +112,13 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                             setOpen(true);
                           }}
                           isActive={activeItem.title === item.title}
-                          className={`p-3.5 rounded-lg transition-colors duration-200 flex items-center justify-center w-full ${
+                          className={`size-8 rounded-lg transition-colors duration-200 flex items-center justify-center ${
                             activeItem.title === item.title 
                               ? 'bg-black text-white' 
                               : 'hover:bg-gray-100'
                           }`}
                         >
-                          <item.icon className="size-5" />
+                          <item.icon className="size-4" />
                         </SidebarMenuButton>
                       </TooltipTrigger>
                       <TooltipContent side="right">{item.title}</TooltipContent>
@@ -135,9 +129,9 @@ export function AppSidebar({ user }: { user: User | undefined }) {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter>
+        <SidebarFooter className="shrink-0">
           {user && (
-            <SidebarMenu>
+            <SidebarMenu className="flex flex-col items-center">
               <SidebarMenuItem>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -152,19 +146,18 @@ export function AppSidebar({ user }: { user: User | undefined }) {
       </Sidebar>
 
       {/* Right sidebar - Content area */}
-      <Sidebar collapsible="none" className="hidden flex-1 md:flex ml-[4rem] !transition-none">
+      <Sidebar collapsible="none" className="hidden flex-1 md:flex ml-12 !transition-none w-[280px] border-r bg-white">
           {activeItem.title === 'Chat' ? (
             <>
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col size-full">
               {/* 顶部标题栏 */}
-              <div className="flex items-center justify-between px-4 py-3 border-b bg-white/50 backdrop-blur-sm">
+              <div className="flex items-center justify-between p-3 border-b bg-white/50 backdrop-blur-sm">
                 <h2 className="text-base font-medium text-gray-900">{activeItem.title}</h2>
                 <button
                   onClick={() => {
                     router.push('/');
-                    setOpen(false);
                   }}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-900"
+                  className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-900"
                 >
                   <svg
                     width="15"
@@ -186,18 +179,18 @@ export function AppSidebar({ user }: { user: User | undefined }) {
 
               {/* 聊天历史记录 */}
               <div className="flex-1 overflow-auto">
-                <SidebarContent>
+                <SidebarContent className="px-2">
                   <SidebarHistory user={user} />
                 </SidebarContent>
               </div>
 
               {/* 底部搜索栏 */}
-              <div className="p-4 border-t bg-white/50 backdrop-blur-sm">
+              <div className="p-3 border-t bg-white/50 backdrop-blur-sm">
                 <div className="relative">
                   <input
                     type="text"
                     placeholder="Search chats"
-                    className="w-full px-4 py-2 text-sm bg-gray-50 dark:bg-zinc-800/90 rounded-lg border border-gray-200 dark:border-zinc-700 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white placeholder:text-gray-500 dark:placeholder:text-zinc-400"
+                    className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-zinc-800/90 rounded-lg border border-gray-200 dark:border-zinc-700 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white placeholder:text-gray-500 dark:placeholder:text-zinc-400"
                   />
                   <svg
                     width="15"
@@ -205,7 +198,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                     viewBox="0 0 15 15"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 size-4 text-gray-400"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 size-4 text-gray-400"
                   >
                     <path
                       d="M10 6.5C10 8.433 8.433 10 6.5 10C4.567 10 3 8.433 3 6.5C3 4.567 4.567 3 6.5 3C8.433 3 10 4.567 10 6.5ZM9.30884 10.0159C8.53901 10.6318 7.56251 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5C11 7.56251 10.6318 8.53901 10.0159 9.30884L12.8536 12.1464C13.0488 12.3417 13.0488 12.6583 12.8536 12.8536C12.6583 13.0488 12.3417 13.0488 12.1464 12.8536L9.30884 10.0159Z"

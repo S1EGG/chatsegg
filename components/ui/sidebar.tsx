@@ -367,7 +367,11 @@ const SidebarHeader = React.forwardRef<
     <div
       ref={ref}
       data-sidebar="header"
-      className={cn('flex flex-col gap-2 p-2 pt-3 pb-3 !transition-none', 'group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:pt-3 group-data-[collapsible=icon]:pb-4', className)}
+      className={cn(
+        'flex flex-col gap-2 p-2 pt-3 pb-3 !transition-none',
+        'group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:pt-3 group-data-[collapsible=icon]:pb-3',
+        className
+      )}
       {...props}
     />
   );
@@ -413,7 +417,7 @@ const SidebarContent = React.forwardRef<
       ref={ref}
       data-sidebar="content"
       className={cn(
-        'flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden',
+        'flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden pt-1',
         className,
       )}
       {...props}
@@ -802,6 +806,60 @@ const SidebarBrandMenuItem = React.forwardRef<
 });
 SidebarBrandMenuItem.displayName = 'SidebarBrandMenuItem';
 
+const SidebarChatHeader = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<'div'>
+>(({ className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      data-sidebar="chat-header"
+      className={cn(
+        'flex items-center justify-between p-3 border-b bg-white/50 backdrop-blur-sm',
+        className
+      )}
+      {...props}
+    />
+  );
+});
+SidebarChatHeader.displayName = 'SidebarChatHeader';
+
+const SidebarChatContent = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<'div'>
+>(({ className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      data-sidebar="chat-content"
+      className={cn(
+        'flex flex-col px-2 pt-0',
+        className
+      )}
+      {...props}
+    />
+  );
+});
+SidebarChatContent.displayName = 'SidebarChatContent';
+
+const SidebarChatHistory = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<'div'>
+>(({ className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      data-sidebar="chat-history"
+      className={cn(
+        'flex-1 -ml-2',
+        className
+      )}
+      {...props}
+    />
+  );
+});
+SidebarChatHistory.displayName = 'SidebarChatHistory';
+
 export {
   Sidebar,
   SidebarContent,
@@ -829,4 +887,7 @@ export {
   SidebarBrandButton,
   SidebarBrandMenuItem,
   useSidebar,
+  SidebarChatHeader,
+  SidebarChatContent,
+  SidebarChatHistory,
 };

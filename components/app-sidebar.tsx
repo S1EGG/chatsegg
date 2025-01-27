@@ -21,6 +21,9 @@ import {
   SidebarBrandButton,
   SidebarBrandMenuItem,
   useSidebar,
+  SidebarChatHeader,
+  SidebarChatContent,
+  SidebarChatHistory,
 } from '@/components/ui/sidebar';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
@@ -150,14 +153,13 @@ export function AppSidebar({ user }: { user: User | undefined }) {
           {activeItem.title === 'Chat' ? (
             <>
             <div className="flex flex-col size-full">
-              {/* 顶部标题栏 */}
-              <div className="flex items-center justify-between p-3 border-b bg-white/50 backdrop-blur-sm">
+              <SidebarChatHeader>
                 <h2 className="text-base font-medium text-gray-900">{activeItem.title}</h2>
                 <button
                   onClick={() => {
                     router.push('/');
                   }}
-                  className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-900"
+                  className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-900 -translate-x-2"
                 >
                   <svg
                     width="15"
@@ -175,39 +177,17 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                     />
                   </svg>
                 </button>
-              </div>
+              </SidebarChatHeader>
 
-              {/* 聊天历史记录 */}
+              {/* 内容区域 */}
               <div className="flex-1 overflow-auto">
-                <SidebarContent className="px-2">
-                  <SidebarHistory user={user} />
-                </SidebarContent>
-              </div>
-
-              {/* 底部搜索栏 */}
-              <div className="p-3 border-t bg-white/50 backdrop-blur-sm">
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search chats"
-                    className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-zinc-800/90 rounded-lg border border-gray-200 dark:border-zinc-700 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white placeholder:text-gray-500 dark:placeholder:text-zinc-400"
-                  />
-                  <svg
-                    width="15"
-                    height="15"
-                    viewBox="0 0 15 15"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 size-4 text-gray-400"
-                  >
-                    <path
-                      d="M10 6.5C10 8.433 8.433 10 6.5 10C4.567 10 3 8.433 3 6.5C3 4.567 4.567 3 6.5 3C8.433 3 10 4.567 10 6.5ZM9.30884 10.0159C8.53901 10.6318 7.56251 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5C11 7.56251 10.6318 8.53901 10.0159 9.30884L12.8536 12.1464C13.0488 12.3417 13.0488 12.6583 12.8536 12.8536C12.6583 13.0488 12.3417 13.0488 12.1464 12.8536L9.30884 10.0159Z"
-                      fill="currentColor"
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
+                <SidebarChatContent>
+                  <SidebarChatHistory>
+                    <SidebarContent className="px-0">
+                      <SidebarHistory user={user} />
+                    </SidebarContent>
+                  </SidebarChatHistory>
+                </SidebarChatContent>
               </div>
             </div>
             </>

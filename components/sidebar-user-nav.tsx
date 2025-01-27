@@ -33,7 +33,7 @@ export function SidebarUserNav({ user }: { user: User }) {
           >
             <DropdownMenuTrigger asChild>
               <div className="flex items-center justify-center">
-                <Avatar className="h-8 w-8 rounded-full">
+                <Avatar className="size-8 rounded-full">
                   <AvatarImage
                     src={user.image || ''}
                     alt={user.name || ''}

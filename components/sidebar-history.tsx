@@ -76,9 +76,11 @@ const PureChatItem = ({
 
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton asChild isActive={isActive}>
-        <Link href={`/chat/${chat.id}`} onClick={() => setOpenMobile(false)}>
-          <span>{chat.title}</span>
+      <SidebarMenuButton asChild isActive={isActive} className="!text-xs !font-normal group/button">
+        <Link href={`/chat/${chat.id}`} onClick={() => setOpenMobile(false)} className="w-full">
+          <div className="flex items-center w-full pr-8">
+            <span className="truncate max-w-[180px]">{chat.title}</span>
+          </div>
         </Link>
       </SidebarMenuButton>
 

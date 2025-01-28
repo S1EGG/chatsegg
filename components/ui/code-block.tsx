@@ -26,6 +26,7 @@ export function CodeBlock({ language = 'typescript', code, className }: CodeBloc
   return (
     <div className={cn('relative group rounded-md', className)}>
       <button
+        type="button"
         onClick={copyToClipboard}
         className="absolute right-2 top-2 p-2 rounded-md bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity"
         aria-label="Copy code"

@@ -167,6 +167,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
               <SidebarChatHeader>
                 <h2 className="text-base font-medium text-foreground dark:text-foreground">{activeItem.title}</h2>
                 <button
+                  type="button"
                   onClick={() => {
                     router.push('/');
                   }}

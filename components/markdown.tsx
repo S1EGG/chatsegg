@@ -1,4 +1,4 @@
-import React from 'react';
+import { Children, isValidElement } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { CodeBlock } from './ui/code-block';
@@ -15,8 +15,8 @@ export function Markdown({ children, className }: MarkdownProps) {
       remarkPlugins={[remarkGfm]}
       components={{
         pre({ children, ...props }) {
-          const childNode = children && React.Children.toArray(children)[0];
-          if (!React.isValidElement(childNode)) {
+          const childNode = children && Children.toArray(children)[0];
+          if (!isValidElement(childNode)) {
             return <pre {...props}>{children}</pre>;
           }
 

@@ -117,5 +117,5 @@ pnpm dev
 
 如果您有任何问题或建议，欢迎通过以下方式联系我们：
 
-- 提交 [Issue](https://github.com/yourusername/chatsegg/issues)
-- 发送邮件至 [your-email@example.com](mailto:your-email@example.com) 
+- 提交 [Issue](https://github.com/S1EGG/chatsegg/issues)
+- 发送邮件至 [your-email@example.com](mailto:tom.wangshihao@gmail.com) 

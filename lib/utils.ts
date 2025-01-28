@@ -1,3 +1,7 @@
+/**
+ * Utility functions and types for the application
+ * This file contains commonly used helper functions and type definitions
+ */
 import type {
   CoreAssistantMessage,
   CoreMessage,
@@ -10,15 +14,32 @@ import { twMerge } from 'tailwind-merge';
 
 import type { Message as DBMessage, Document } from '@/lib/db/schema';
 
+/**
+ * Merges class names using clsx and tailwind-merge
+ * Useful for combining Tailwind CSS classes with dynamic conditions
+ * @param inputs - Array of class names or conditional class objects
+ * @returns Merged class string
+ */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * Custom error type for application-specific errors
+ * Includes additional context like status code and info
+ */
 interface ApplicationError extends Error {
   info: string;
   status: number;
 }
 
+/**
+ * Generic data fetcher with error handling
+ * Used with SWR for data fetching
+ * @param url - API endpoint URL
+ * @returns JSON response data
+ * @throws ApplicationError on failed requests
+ */
 export const fetcher = async (url: string) => {
   const res = await fetch(url);
 
@@ -36,6 +57,12 @@ export const fetcher = async (url: string) => {
   return res.json();
 };
 
+/**
+ * Safely retrieves data from localStorage with JSON parsing
+ * Returns empty array if key doesn't exist or if running on server
+ * @param key - localStorage key
+ * @returns Parsed data or empty array
+ */
 export function getLocalStorage(key: string) {
   if (typeof window !== 'undefined') {
     return JSON.parse(localStorage.getItem(key) || '[]');
@@ -43,6 +70,11 @@ export function getLocalStorage(key: string) {
   return [];
 }
 
+/**
+ * Generates a UUID v4 string
+ * Used for creating unique identifiers
+ * @returns UUID string
+ */
 export function generateUUID(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;
@@ -51,6 +83,13 @@ export function generateUUID(): string {
   });
 }
 
+/**
+ * Updates chat messages with tool invocation results
+ * Used to handle AI tool responses in chat
+ * @param toolMessage - Tool response message
+ * @param messages - Current chat messages
+ * @returns Updated messages array with tool results
+ */
 function addToolMessageToChat({
   toolMessage,
   messages,

@@ -36,15 +36,38 @@ import { useBlock } from '@/hooks/use-block';
 import equal from 'fast-deep-equal';
 import { ImageEditor } from './image-editor';
 
+/**
+ * 内容块组件系统
+ * 提供了一个灵活的内容块系统，支持多种类型的内容展示，如文本、代码和图片
+ */
+
+/**
+ * 内容块类型定义
+ * 定义了系统支持的所有内容块类型
+ * - text: 富文本内容，支持格式化和样式
+ * - code: 代码内容，支持语法高亮
+ * - image: 图片内容，支持预览和编辑
+ */
 export type BlockKind = 'text' | 'code' | 'image';
 
+/**
+ * UI内容块接口定义
+ * 描述了内容块的基本结构和属性
+ */
 export interface UIBlock {
+  /** 内容块标题 */
   title: string;
+  /** 关联文档的唯一标识符 */
   documentId: string;
+  /** 内容块类型 */
   kind: BlockKind;
+  /** 内容块的实际内容（文本、代码或图片数据） */
   content: string;
+  /** Whether the block is currently visible in the UI */
   isVisible: boolean;
+  /** Current state of the block (streaming new content or idle) */
   status: 'streaming' | 'idle';
+  /** Position and size of the block in the viewport */
   boundingBox: {
     top: number;
     left: number;
@@ -53,14 +76,27 @@ export interface UIBlock {
   };
 }
 
+/**
+ * Interface for content displayed in the console output
+ * Supports both text and image output types
+ */
 export interface ConsoleOutputContent {
+  /** Type of content being displayed */
   type: 'text' | 'image';
+  /** Actual content value */
   value: string;
 }
 
+/**
+ * Interface for managing console output state and content
+ * Used for displaying execution results and progress
+ */
 export interface ConsoleOutput {
+  /** Unique identifier for the console output */
   id: string;
+  /** Current status of the execution */
   status: 'in_progress' | 'loading_packages' | 'completed' | 'failed';
+  /** Array of output contents (can mix text and images) */
   contents: Array<ConsoleOutputContent>;
 }
 
@@ -105,7 +141,7 @@ function PureBlock({
   ) => Promise<string | null | undefined>;
   isReadonly: boolean;
 }) {
-  const { block, setBlock } = useBlock();
+    const { block, setBlock } = useBlock();
 
   const {
     data: documents,
@@ -115,25 +151,25 @@ function PureBlock({
     block.documentId !== 'init' && block.status !== 'streaming'
       ? `/api/document?id=${block.documentId}`
       : null,
-    fetcher,
-  );
+      fetcher,
+    );
 
   const { data: suggestions } = useSWR<Array<Suggestion>>(
     documents && block && block.status !== 'streaming'
       ? `/api/suggestions?documentId=${block.documentId}`
       : null,
-    fetcher,
+      fetcher,
     {
       dedupingInterval: 5000,
     },
-  );
+    );
 
   const [mode, setMode] = useState<'edit' | 'diff'>('edit');
   const [document, setDocument] = useState<Document | null>(null);
   const [currentVersionIndex, setCurrentVersionIndex] = useState(-1);
   const [consoleOutputs, setConsoleOutputs] = useState<Array<ConsoleOutput>>(
     [],
-  );
+    );
 
   const { open: isSidebarOpen } = useSidebar();
 
@@ -152,7 +188,7 @@ function PureBlock({
     }
   }, [documents, setBlock]);
 
-  useEffect(() => {
+    useEffect(() => {
     mutateDocuments();
   }, [block.status, mutateDocuments]);
 
@@ -196,17 +232,17 @@ function PureBlock({
             return [...currentDocuments, newDocument];
           }
           return currentDocuments;
-        },
+      },
         { revalidate: false },
-      );
+          );
     },
     [block, mutate],
-  );
+    );
 
   const debouncedHandleContentChange = useDebounceCallback(
     handleContentChange,
     2000,
-  );
+          );
 
   const saveContent = useCallback(
     (updatedContent: string, debounce: boolean) => {
@@ -217,17 +253,17 @@ function PureBlock({
           debouncedHandleContentChange(updatedContent);
         } else {
           handleContentChange(updatedContent);
-        }
+      }
       }
     },
     [document, debouncedHandleContentChange, handleContentChange],
-  );
+          );
 
   function getDocumentContentById(index: number) {
     if (!documents) return '';
     if (!documents[index]) return '';
     return documents[index].content ?? '';
-  }
+    }
 
   const handleVersionChange = (type: 'next' | 'prev' | 'toggle' | 'latest') => {
     if (!documents) return;
@@ -249,8 +285,8 @@ function PureBlock({
       if (currentVersionIndex < documents.length - 1) {
         setCurrentVersionIndex((index) => index + 1);
       }
-    }
-  };
+      }
+    };
 
   const [isToolbarVisible, setIsToolbarVisible] = useState(false);
 
@@ -268,10 +304,10 @@ function PureBlock({
   const { width: windowWidth, height: windowHeight } = useWindowSize();
   const isMobile = windowWidth ? windowWidth < 768 : false;
 
-  return (
+    return (
     <AnimatePresence>
       {block.isVisible && (
-        <motion.div
+      <motion.div
           className="flex flex-row h-dvh w-dvw fixed top-0 left-0 z-50 bg-transparent"
           initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
@@ -290,7 +326,7 @@ function PureBlock({
                 right: 0,
               }}
             />
-          )}
+        )}
 
           {!isMobile && (
             <motion.div
@@ -313,7 +349,7 @@ function PureBlock({
                 scale: 1,
                 transition: { duration: 0 },
               }}
-            >
+      >
               <AnimatePresence>
                 {!isCurrentVersion && (
                   <motion.div
@@ -353,9 +389,9 @@ function PureBlock({
                     setMessages={setMessages}
                   />
                 </form>
-              </div>
+          </div>
             </motion.div>
-          )}
+        )}
 
           <motion.div
             className="fixed dark:bg-muted bg-background h-dvh flex flex-col overflow-y-scroll md:border-l dark:border-zinc-700 border-zinc-200"
@@ -423,7 +459,7 @@ function PureBlock({
                 damping: 30,
               },
             }}
-          >
+      >
             <div className="p-2 flex flex-row justify-between items-start">
               <div className="flex flex-row gap-4 items-start">
                 <BlockCloseButton />
@@ -449,17 +485,17 @@ function PureBlock({
                     <div className="w-32 h-3 mt-2 bg-muted-foreground/20 rounded-md animate-pulse" />
                   )}
                 </div>
-              </div>
+          </div>
 
-              <BlockActions
-                block={block}
+            <BlockActions
+              block={block}
                 currentVersionIndex={currentVersionIndex}
                 handleVersionChange={handleVersionChange}
                 isCurrentVersion={isCurrentVersion}
                 mode={mode}
                 setConsoleOutputs={setConsoleOutputs}
-              />
-            </div>
+            />
+        </div>
 
             <div
               className={cn(
@@ -542,19 +578,19 @@ function PureBlock({
                       stop={stop}
                       setMessages={setMessages}
                       blockKind={block.kind}
-                    />
+          />
                   )}
                 </AnimatePresence>
-              </div>
-            </div>
+        </div>
+        </div>
 
             <AnimatePresence>
               {!isCurrentVersion && (
-                <VersionFooter
+        <VersionFooter
                   currentVersionIndex={currentVersionIndex}
                   documents={documents}
                   handleVersionChange={handleVersionChange}
-                />
+        />
               )}
             </AnimatePresence>
 
@@ -564,11 +600,11 @@ function PureBlock({
                 setConsoleOutputs={setConsoleOutputs}
               />
             </AnimatePresence>
-          </motion.div>
-        </motion.div>
+      </motion.div>
+      </motion.div>
       )}
     </AnimatePresence>
-  );
+    );
 }
 
 export const Block = memo(PureBlock, (prevProps, nextProps) => {

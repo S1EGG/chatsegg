@@ -39,12 +39,12 @@ export function ModelSelector({
           className,
         )}
       >
-        <Button variant="outline" className="md:px-2 md:h-[34px]">
+        <Button variant="outline" className="md:px-2 md:h-[34px] rounded-lg">
           {selectedModel?.label}
           <ChevronDownIcon />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="min-w-[300px]">
+      <DropdownMenuContent align="start" className="min-w-[300px] rounded-lg">
         {models.map((model) => (
           <DropdownMenuItem
             key={model.id}
@@ -56,7 +56,7 @@ export function ModelSelector({
                 saveModelId(model.id);
               });
             }}
-            className="gap-4 group/item flex flex-row justify-between items-center"
+            className="gap-4 group/item flex flex-row justify-between items-center rounded-lg"
             data-active={model.id === optimisticModelId}
           >
             <div className="flex flex-col gap-1 items-start">

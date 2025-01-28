@@ -1,7 +1,16 @@
+/**
+ * 卡片组件系统
+ * 提供了一组用于创建卡片式UI的组件，包括卡片容器、标题、描述、内容和页脚
+ */
+
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
+/**
+ * Card 组件
+ * 基础卡片容器，提供圆角、边框和阴影效果
+ */
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -17,6 +26,10 @@ const Card = React.forwardRef<
 ));
 Card.displayName = 'Card';
 
+/**
+ * CardHeader 组件
+ * 卡片头部区域，用于放置标题和描述
+ */
 const CardHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -29,6 +42,10 @@ const CardHeader = React.forwardRef<
 ));
 CardHeader.displayName = 'CardHeader';
 
+/**
+ * CardTitle 组件
+ * 卡片标题，使用较大字号和粗体样式
+ */
 const CardTitle = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -44,6 +61,10 @@ const CardTitle = React.forwardRef<
 ));
 CardTitle.displayName = 'CardTitle';
 
+/**
+ * CardDescription 组件
+ * 卡片描述文本，使用较小字号和次要文本颜色
+ */
 const CardDescription = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -56,6 +77,10 @@ const CardDescription = React.forwardRef<
 ));
 CardDescription.displayName = 'CardDescription';
 
+/**
+ * CardContent 组件
+ * 卡片主要内容区域
+ */
 const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -64,6 +89,10 @@ const CardContent = React.forwardRef<
 ));
 CardContent.displayName = 'CardContent';
 
+/**
+ * CardFooter 组件
+ * 卡片页脚区域，通常用于放置操作按钮
+ */
 const CardFooter = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>

@@ -1,3 +1,9 @@
+/**
+ * Database Queries Module
+ * This module provides a collection of functions for interacting with the database.
+ * It includes operations for users, chats, messages, documents, and suggestions.
+ */
+
 import 'server-only';
 
 import { genSaltSync, hashSync } from 'bcrypt-ts';
@@ -18,14 +24,20 @@ import {
 } from './schema';
 import { BlockKind } from '@/components/block';
 
-// Optionally, if not using email/pass login, you can
-// use the Drizzle adapter for Auth.js / NextAuth
-// https://authjs.dev/reference/adapter/drizzle
-
+// Initialize database connection
 // biome-ignore lint: Forbidden non-null assertion.
 const client = postgres(process.env.POSTGRES_URL!);
 const db = drizzle(client);
 
+/**
+ * User Management Functions
+ */
+
+/**
+ * Retrieves a user by their email address
+ * @param email - The email address to search for
+ * @returns Promise resolving to an array of matching users
+ */
 export async function getUser(email: string): Promise<Array<User>> {
   try {
     return await db.select().from(user).where(eq(user.email, email));
@@ -35,6 +47,12 @@ export async function getUser(email: string): Promise<Array<User>> {
   }
 }
 
+/**
+ * Creates a new user with the given email and password
+ * Password is hashed before storage
+ * @param email - User's email address
+ * @param password - User's plain text password
+ */
 export async function createUser(email: string, password: string) {
   const salt = genSaltSync(10);
   const hash = hashSync(password, salt);
@@ -47,6 +65,16 @@ export async function createUser(email: string, password: string) {
   }
 }
 
+/**
+ * Chat Management Functions
+ */
+
+/**
+ * Creates a new chat session
+ * @param id - Unique identifier for the chat
+ * @param userId - ID of the user creating the chat
+ * @param title - Title of the chat session
+ */
 export async function saveChat({
   id,
   userId,
@@ -69,6 +97,11 @@ export async function saveChat({
   }
 }
 
+/**
+ * Deletes a chat session and all related data
+ * This includes messages and votes associated with the chat
+ * @param id - ID of the chat to delete
+ */
 export async function deleteChatById({ id }: { id: string }) {
   try {
     await db.delete(vote).where(eq(vote.chatId, id));
@@ -81,6 +114,11 @@ export async function deleteChatById({ id }: { id: string }) {
   }
 }
 
+/**
+ * Retrieves all chats for a specific user
+ * Results are ordered by creation date (newest first)
+ * @param id - User ID to fetch chats for
+ */
 export async function getChatsByUserId({ id }: { id: string }) {
   try {
     return await db
@@ -94,6 +132,10 @@ export async function getChatsByUserId({ id }: { id: string }) {
   }
 }
 
+/**
+ * Retrieves a specific chat by its ID
+ * @param id - Chat ID to fetch
+ */
 export async function getChatById({ id }: { id: string }) {
   try {
     const [selectedChat] = await db.select().from(chat).where(eq(chat.id, id));
@@ -104,6 +146,14 @@ export async function getChatById({ id }: { id: string }) {
   }
 }
 
+/**
+ * Message Management Functions
+ */
+
+/**
+ * Saves multiple messages to the database
+ * @param messages - Array of messages to save
+ */
 export async function saveMessages({ messages }: { messages: Array<Message> }) {
   try {
     return await db.insert(message).values(messages);
@@ -113,6 +163,11 @@ export async function saveMessages({ messages }: { messages: Array<Message> }) {
   }
 }
 
+/**
+ * Retrieves all messages for a specific chat
+ * Results are ordered by creation date (oldest first)
+ * @param id - Chat ID to fetch messages for
+ */
 export async function getMessagesByChatId({ id }: { id: string }) {
   try {
     return await db
@@ -126,6 +181,17 @@ export async function getMessagesByChatId({ id }: { id: string }) {
   }
 }
 
+/**
+ * Voting System Functions
+ */
+
+/**
+ * Records or updates a vote on a message
+ * If a vote already exists, it updates the vote type
+ * @param chatId - ID of the chat containing the message
+ * @param messageId - ID of the message being voted on
+ * @param type - Type of vote ('up' or 'down')
+ */
 export async function voteMessage({
   chatId,
   messageId,
@@ -158,6 +224,10 @@ export async function voteMessage({
   }
 }
 
+/**
+ * Retrieves all votes for a specific chat
+ * @param id - Chat ID to fetch votes for
+ */
 export async function getVotesByChatId({ id }: { id: string }) {
   try {
     return await db.select().from(vote).where(eq(vote.chatId, id));
@@ -167,6 +237,18 @@ export async function getVotesByChatId({ id }: { id: string }) {
   }
 }
 
+/**
+ * Document Management Functions
+ */
+
+/**
+ * Creates a new document
+ * @param id - Unique identifier for the document
+ * @param title - Document title
+ * @param kind - Type of document (text, code, or image)
+ * @param content - Document content
+ * @param userId - ID of the user creating the document
+ */
 export async function saveDocument({
   id,
   title,
@@ -195,6 +277,11 @@ export async function saveDocument({
   }
 }
 
+/**
+ * Retrieves all versions of a document
+ * Results are ordered by creation date (oldest first)
+ * @param id - Document ID to fetch versions for
+ */
 export async function getDocumentsById({ id }: { id: string }) {
   try {
     const documents = await db
@@ -210,6 +297,10 @@ export async function getDocumentsById({ id }: { id: string }) {
   }
 }
 
+/**
+ * Retrieves the most recent version of a document
+ * @param id - Document ID to fetch
+ */
 export async function getDocumentById({ id }: { id: string }) {
   try {
     const [selectedDocument] = await db
@@ -225,6 +316,12 @@ export async function getDocumentById({ id }: { id: string }) {
   }
 }
 
+/**
+ * Deletes document versions after a specific timestamp
+ * Also deletes related suggestions
+ * @param id - Document ID
+ * @param timestamp - Timestamp to delete versions after
+ */
 export async function deleteDocumentsByIdAfterTimestamp({
   id,
   timestamp,
@@ -253,6 +350,14 @@ export async function deleteDocumentsByIdAfterTimestamp({
   }
 }
 
+/**
+ * Suggestion Management Functions
+ */
+
+/**
+ * Saves multiple suggestions to the database
+ * @param suggestions - Array of suggestions to save
+ */
 export async function saveSuggestions({
   suggestions,
 }: {
@@ -266,6 +371,10 @@ export async function saveSuggestions({
   }
 }
 
+/**
+ * Retrieves all suggestions for a specific document
+ * @param documentId - Document ID to fetch suggestions for
+ */
 export async function getSuggestionsByDocumentId({
   documentId,
 }: {
@@ -284,6 +393,14 @@ export async function getSuggestionsByDocumentId({
   }
 }
 
+/**
+ * Message Management Functions
+ */
+
+/**
+ * Retrieves a specific message by its ID
+ * @param id - Message ID to fetch
+ */
 export async function getMessageById({ id }: { id: string }) {
   try {
     return await db.select().from(message).where(eq(message.id, id));
@@ -293,6 +410,11 @@ export async function getMessageById({ id }: { id: string }) {
   }
 }
 
+/**
+ * Deletes messages from a chat after a specific timestamp
+ * @param chatId - Chat ID
+ * @param timestamp - Timestamp to delete messages after
+ */
 export async function deleteMessagesByChatIdAfterTimestamp({
   chatId,
   timestamp,
@@ -314,6 +436,11 @@ export async function deleteMessagesByChatIdAfterTimestamp({
   }
 }
 
+/**
+ * Updates the visibility setting of a chat
+ * @param chatId - Chat ID to update
+ * @param visibility - New visibility setting ('private' or 'public')
+ */
 export async function updateChatVisiblityById({
   chatId,
   visibility,

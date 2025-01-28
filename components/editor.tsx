@@ -59,7 +59,7 @@ function PureEditor({
           }),
           suggestionsPlugin,
         ],
-      });
+    });
 
       editorRef.current = new EditorView(containerRef.current, {
         state,
@@ -79,10 +79,10 @@ function PureEditor({
   useEffect(() => {
     if (editorRef.current) {
       editorRef.current.setProps({
-        dispatchTransaction: (transaction) => {
+      dispatchTransaction: (transaction) => {
           handleTransaction({ transaction, editorRef, saveContent });
-        },
-      });
+      },
+    });
     }
   }, [saveContent]);
 

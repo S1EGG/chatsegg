@@ -1,3 +1,9 @@
+/**
+ * Database Schema Definition
+ * This file defines the database schema using Drizzle ORM for PostgreSQL.
+ * It includes table definitions, relationships, and type exports.
+ */
+
 import type { InferSelectModel } from 'drizzle-orm';
 import {
   pgTable,
@@ -11,6 +17,10 @@ import {
   boolean,
 } from 'drizzle-orm/pg-core';
 
+/**
+ * User Table Schema
+ * Stores user authentication and profile information
+ */
 export const user = pgTable('User', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
   email: varchar('email', { length: 64 }).notNull(),
@@ -19,6 +29,10 @@ export const user = pgTable('User', {
 
 export type User = InferSelectModel<typeof user>;
 
+/**
+ * Chat Table Schema
+ * Represents a chat session between a user and the AI
+ */
 export const chat = pgTable('Chat', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
   createdAt: timestamp('createdAt').notNull(),
@@ -33,6 +47,10 @@ export const chat = pgTable('Chat', {
 
 export type Chat = InferSelectModel<typeof chat>;
 
+/**
+ * Message Table Schema
+ * Stores individual messages within a chat session
+ */
 export const message = pgTable('Message', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
   chatId: uuid('chatId')
@@ -45,6 +63,10 @@ export const message = pgTable('Message', {
 
 export type Message = InferSelectModel<typeof message>;
 
+/**
+ * Vote Table Schema
+ * Tracks user votes (upvotes/downvotes) on chat messages
+ */
 export const vote = pgTable(
   'Vote',
   {
@@ -65,6 +87,11 @@ export const vote = pgTable(
 
 export type Vote = InferSelectModel<typeof vote>;
 
+/**
+ * Document Table Schema
+ * Stores documents created during chat sessions
+ * Documents can be of different kinds: text, code, or image
+ */
 export const document = pgTable(
   'Document',
   {
@@ -88,6 +115,11 @@ export const document = pgTable(
 
 export type Document = InferSelectModel<typeof document>;
 
+/**
+ * Suggestion Table Schema
+ * Stores AI-generated suggestions for document improvements
+ * Links to specific document versions and tracks their resolution status
+ */
 export const suggestion = pgTable(
   'Suggestion',
   {

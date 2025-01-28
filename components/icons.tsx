@@ -1,3 +1,8 @@
+/**
+ * 图标组件系统
+ * 提供了一组统一风格的SVG图标组件，支持自定义大小和颜色
+ */
+
 export const BotIcon = () => {
   return (
     <svg

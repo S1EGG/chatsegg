@@ -1,3 +1,10 @@
+/**
+ * Application Sidebar Component
+ * 
+ * This component provides the main navigation and user interface elements
+ * for the application's sidebar. It includes chat history, user navigation,
+ * and various action buttons.
+ */
 'use client';
 
 import * as React from 'react';
@@ -27,6 +34,10 @@ import {
 } from '@/components/ui/sidebar';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
+/**
+ * Navigation items configuration
+ * Defines the main navigation menu items with their icons and states
+ */
 const navItems = [
   {
     title: 'Chat',
@@ -84,9 +95,9 @@ export function AppSidebar({ user }: { user: User | undefined }) {
       {/* Left sidebar - Icon navigation */}
       <Sidebar
         collapsible="none"
-        className="!w-12 border-r shrink-0 fixed left-0 z-50 !transition-none bg-white flex flex-col"
+        className="!w-12 border-r border-border shrink-0 fixed left-0 z-50 !transition-none bg-background dark:bg-black flex flex-col"
       >
-        <SidebarHeader className="shrink-0">
+        <SidebarHeader className="shrink-0 bg-background dark:bg-black">
           <SidebarMenu className="flex flex-col items-center !transition-none">
             <SidebarBrandMenuItem
               src="/images/brandlogopng.png"
@@ -99,7 +110,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
             />
           </SidebarMenu>
         </SidebarHeader>
-        <SidebarContent className="flex-1">
+        <SidebarContent className="flex-1 bg-background dark:bg-black">
           <SidebarGroup>
             <SidebarGroupContent>
               <SidebarMenu className="flex flex-col items-center gap-3">
@@ -117,8 +128,8 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                           isActive={activeItem.title === item.title}
                           className={`size-8 rounded-lg transition-colors duration-200 flex items-center justify-center ${
                             activeItem.title === item.title 
-                              ? 'bg-black text-white' 
-                              : 'hover:bg-gray-100'
+                              ? 'bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground' 
+                              : 'hover:bg-muted dark:hover:bg-muted/50'
                           }`}
                         >
                           <item.icon className="size-4" />
@@ -132,7 +143,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter className="shrink-0">
+        <SidebarFooter className="shrink-0 bg-background dark:bg-black">
           {user && (
             <SidebarMenu className="flex flex-col items-center">
               <SidebarMenuItem>
@@ -149,17 +160,17 @@ export function AppSidebar({ user }: { user: User | undefined }) {
       </Sidebar>
 
       {/* Right sidebar - Content area */}
-      <Sidebar collapsible="none" className="hidden flex-1 md:flex ml-12 !transition-none w-[280px] border-r bg-white">
+      <Sidebar collapsible="none" className="hidden flex-1 md:flex ml-12 !transition-none w-[280px] border-r border-border bg-background dark:bg-black">
           {activeItem.title === 'Chat' ? (
             <>
             <div className="flex flex-col size-full">
               <SidebarChatHeader>
-                <h2 className="text-base font-medium text-gray-900">{activeItem.title}</h2>
+                <h2 className="text-base font-medium text-foreground dark:text-foreground">{activeItem.title}</h2>
                 <button
                   onClick={() => {
                     router.push('/');
                   }}
-                  className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-900 -translate-x-2"
+                  className="p-1.5 hover:bg-muted dark:hover:bg-muted/50 rounded-lg transition-colors text-muted-foreground hover:text-foreground -translate-x-2"
                 >
                   <svg
                     width="15"
@@ -193,7 +204,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
             </>
           ) : (
             <div className="flex items-center justify-center h-full">
-              <h2 className="text-base font-medium text-gray-500">
+              <h2 className="text-base font-medium text-muted-foreground">
                 {activeItem.title} - Coming Soon
               </h2>
             </div>

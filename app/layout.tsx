@@ -1,6 +1,6 @@
 /**
- * 应用程序根布局组件
- * 为整个应用提供全局配置和布局结构
+ * Root Layout Component
+ * Provides global configuration and layout structure for the entire application
  */
 import type { Metadata } from 'next';
 import { Toaster } from 'sonner';
@@ -10,33 +10,33 @@ import { ThemeProvider } from '@/components/theme-provider';
 import './globals.css';
 
 /**
- * SEO元数据配置
- * 定义应用的基本信息，用于搜索引擎优化和社交媒体分享
+ * SEO Metadata Configuration
+ * Defines basic application information for search engine optimization and social media sharing
  */
 export const metadata: Metadata = {
   metadataBase: new URL('https://chatsegg.vercel.app'),
-  title: 'ChatSegg - 智能聊天助手',
-  description: 'ChatSegg - 基于 Next.js 和 AI SDK 构建的智能聊天助手',
+  title: 'ChatSegg - AI Chat Assistant',
+  description: 'ChatSegg - An intelligent chat assistant built with Next.js and AI SDK',
 };
 
 /**
- * 视口配置
- * 防止移动端Safari浏览器自动缩放
+ * Viewport Configuration
+ * Prevents automatic scaling in Safari on mobile devices
  */
 export const viewport = {
   maximumScale: 1,
 };
 
 /**
- * 主题颜色配置
- * 定义浏览器UI的主题颜色
+ * Theme Color Configuration
+ * Defines browser UI theme colors
  */
 const LIGHT_THEME_COLOR = 'hsl(0 0% 100%)';
 const DARK_THEME_COLOR = 'hsl(240deg 10% 3.92%)';
 
 /**
- * 主题颜色动态更新脚本
- * 在客户端运行，根据用户切换深色/浅色模式时更新浏览器主题色
+ * Theme Color Dynamic Update Script
+ * Runs on the client side to update browser theme color when user toggles dark/light mode
  */
 const THEME_COLOR_SCRIPT = `\
 (function() {
@@ -57,12 +57,12 @@ const THEME_COLOR_SCRIPT = `\
 })();`;
 
 /**
- * 根布局组件
- * 提供以下功能：
- * - 主题支持（深色/浅色模式）
- * - 消息通知系统
- * - 全局样式
- * - 主题颜色管理
+ * Root Layout Component
+ * Provides the following features:
+ * - Theme support (dark/light mode)
+ * - Notification system
+ * - Global styles
+ * - Theme color management
  */
 export default async function RootLayout({
   children,
@@ -72,8 +72,8 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      // next-themes 会在body元素上注入额外的类名以避免视觉闪烁
-      // 因此需要 suppressHydrationWarning 属性来避免React水合警告
+      // next-themes injects additional class names on the body element to prevent visual flickering
+      // suppressHydrationWarning is needed to avoid React hydration warnings
       // https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app
       suppressHydrationWarning
     >

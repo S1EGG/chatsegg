@@ -70,9 +70,9 @@ export function AppSidebar({ user }: { user: User | undefined }) {
   const [activeItem, setActiveItem] = React.useState(navItems[0]);
   const { setOpenMobile, setOpen } = useSidebar();
 
-  // 监听URL hash变化
+  // Listen for URL hash changes
   React.useEffect(() => {
-    // 初始化时设置 activeItem
+    // Initialize activeItem
     const hash = window.location.hash;
     const initialItem = navItems.find(item => item.href === hash) || navItems[0];
     setActiveItem(initialItem);
@@ -191,7 +191,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                 </button>
               </SidebarChatHeader>
 
-              {/* 内容区域 */}
+              {/* Content area */}
               <div className="flex-1 overflow-auto">
                 <SidebarChatContent>
                   <SidebarChatHistory>

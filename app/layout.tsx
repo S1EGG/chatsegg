@@ -14,9 +14,9 @@ import './globals.css';
  * 定义应用的基本信息，用于搜索引擎优化和社交媒体分享
  */
 export const metadata: Metadata = {
-  metadataBase: new URL('https://chat.vercel.ai'),
-  title: 'ChatSegg AI 助手',
-  description: '基于Next.js和AI SDK构建的智能聊天助手。',
+  metadataBase: new URL('https://chatsegg.vercel.app'),
+  title: 'ChatSegg - 智能聊天助手',
+  description: 'ChatSegg - 基于 Next.js 和 AI SDK 构建的智能聊天助手',
 };
 
 /**
